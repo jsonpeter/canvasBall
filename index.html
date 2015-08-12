@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Canvas Game</title>
+    <script>
+        window.onload=function() {
+
+            var canObj = document.getElementById("myCanvas");
+            var cxt = canObj.getContext("2d");
+            var bar={x:30,y:10,vx:4,vy:0,g:2,w:10}; //默认生成
+            var barColor=["green","red","yellow","#444693","#333","#f7acbc","#f47920","#33B5E5","#0099CC","#AA66CC","#9933CC","#99CC00","#669900","#FFBB33","#FF8800","#FF4444","#CC0000"]; //颜色配置
+            var digit =
+                    [
+                        [
+                            [50,10],
+                            [70,10],
+                            [90,10],
+                            [50,30],
+                            [90,30],
+                            [30,30],
+                            [110,30],
+                            [110,50],
+                            [130,50],
+                            [30,50],
+                            [10,50],
+                            [110,70],
+                            [130,70],
+                            [30,70],
+                            [10,70],
+                            [110,90],
+                            [130,90],
+                            [30,90],
+                            [10,90],
+                            [110,110],
+                            [130,110],
+                            [30,110],
+                            [10,110],
+                            [110,130],
+                            [130,130],
+                            [30,130],
+                            [10,130],
+                            [110,150],
+                            [130,150],
+                            [30,150],
+                            [10,150],
+                            [50,190],
+                            [70,190],
+                            [90,190],
+                            [50,170],
+                            [90,170],
+                            [30,170],
+                            [110,170]
+                        ],//0
+                        [
+                            [30,10],
+                            [50,10],
+                            [30,30],
+                            [50,30],
+                            [30,50],
+                            [50,50],
+                            [30,70],
+                            [50,70],
+                            [30,90],
+                            [50,90],
+                            [30,110],
+                            [50,110],
+                            [30,110],
+                            [50,130],
+                            [30,130]
+
+                        ]
+                  ];
+            var barlist=[bar];
+            var canvasInfo={
+                width:function(){
+                    return cxt.canvas.width;
+                },
+                height:function(){
+                    return cxt.canvas.height;
+                }
+            };
+            var Init = {
+                creatArc: function (num) {
+                    var i=0;
+
+                    var dlengt=digit[num].length;
+                        for(var s=0;s<dlengt;s++){
+                            bar={x:digit[num][s][0],y:digit[num][s][1],vx:random(-4,4),vy:0,g:random(1,2),w:10};
+                            cxt.beginPath();
+                            cxt.arc(bar.x,bar.y,bar.w,0,360,false);
+                            cxt.fillStyle="blue";
+                            cxt.fill();//画实心圆
+                            cxt.closePath();
+                            barlist.push(bar);
+                        }
+
+
+                },
+                runit:function(){
+                    var l=barlist.length;
+                    var i=0;
+                    for(;i<l;i++){
+                        cxt.beginPath();
+                        cxt.arc(barlist[i].x,barlist[i].y,barlist[i].w,0,360,false);
+                        cxt.fillStyle=barColor[random(0,17)];//填充颜色,默认是黑色
+                        cxt.fill();//画实心圆
+                        cxt.closePath();
+                    }
+                },
+                moveArc:function(){
+                    var i=0;
+                    var l=barlist.length;
+                    console.log("zengj:"+barlist.length);
+                    for(;i<l;i++) {
+                        barlist[i].x += barlist[i].vx;
+                        barlist[i].y += barlist[i].vy;
+                        barlist[i].vy += barlist[i].g;
+                        if (barlist[i].y >= canvasInfo.height() - barlist[i].w) {
+
+                            barlist[i].y = canvasInfo.height() - barlist[i].w;
+                            barlist[i].vy = -Math.floor(barlist[i].vy / 2);
+
+                        }
+
+                        if (barlist[i].x >= canvasInfo.width() - barlist[i].w) {
+                            barlist[i].x = canvasInfo.width() - barlist[i].w;
+                            barlist[i].vx = -Math.ceil(barlist[i].vx * 0.8);
+                           // clearInterval(timer);
+                        }
+                    }
+                }
+            }
+             var t=0;
+
+            setInterval(function(){
+                console.log(t);
+               Init.creatArc(t);
+                 t=(t>=1?0:t+1);
+
+            },1000);
+           var timer=setInterval(function(){
+               cxt.clearRect(0, 0,cxt.canvas.width,cxt.canvas.height);
+               Init.runit();
+               Init.moveArc();
+            },30);
+
+            Array.prototype.removeA=function(dx)
+            {
+                if(isNaN(dx)||dx>this.length){return false;}
+                for(var i=0,n=0;i<this.length;i++)
+                {
+                    if(this[i]!=this[dx])
+                    {
+                        this[n++]=this[i]
+                    }
+                }
+                this.length-=1
+            }
+            function random(min,max){
+                return Math.floor(min+Math.random()*(max-min));
+            }
+        }
+    </script>
+</head>
+<body>
+<canvas id="myCanvas"  width="500" height="500"></canvas>
+</body>
+</html>
